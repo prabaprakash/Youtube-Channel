@@ -1,0 +1,70 @@
+SSH into AWS ec2/ Digitalocean droplet/ or else other PAAS,
+linux machine
+
+1. Install Docker
+
+$sudo apt install docker.io
+$sudo usermod -aG docker $USER
+I already installed docker
+
+2. Install Open VPN
+
+$docker volume create --name ovpn-data
+server ip=52.66.18.251
+$docker run -v ovpn-data:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://52.66.18.251
+Certificate Generation take 2-5 minutes.
+$docker run -v ovpn-data:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+
+Openvpn running in port 1194
+$docker run -v ovpn-data:/etc/openvpn --name openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn
+
+Create User "praba" without Password, use the keypharse used in certificate generation
+$docker run -v ovpn-data:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full praba nopass
+
+Download the "praba.ovpn" from docker volume to local volume 
+$docker run -v ovpn-data:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient praba > praba.ovpn
+
+download the key to your laptop 
+install openvpn client for windows
+
+check openvpn, by connecting to vpn
+
+3. Install Pihole
+
+change 
+pihole web ui in port 8080
+
+$docker run -it -p 53:53/tcp -p 53:53/udp -p 8080:80   --cap-add=NET_ADMIN   -e ServerIP=52.66.18.251   --name pihole  diginc/pi-hole:debian
+
+pihole is running at pot 8080 but isn't configured to openvpn
+get pihole ip 
+
+$docker inspect pihole
+
+for me 172.17.0.3
+
+4.OpenVPN+Pihole
+
+$docker exec -it openvpn /bin/bash
+$export TERM=xterm
+$apk update 
+$apk add nano 
+$nano /etc/openvpn/openvpn.conf
+
+### Push Configurations Below
+push block-outside-dns
+push dhcp-option DNS 172.17.0.3
+#push dhcp-option DNS 8.8.4.4
+
+ctrl+x to save
+
+before restarting openvpn
+go to youtube.com, you will see advertisement in homepage
+
+5. finally restart openvpn
+$docker restart openvpn
+
+reload youtube.com
+
+go to youtube.com, you will see advertisement blocked in homepage
+enjoy, thanks watching
