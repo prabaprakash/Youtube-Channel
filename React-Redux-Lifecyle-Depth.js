@@ -1,3 +1,4 @@
+//https://codesandbox.io/s/l531n0n439
 import React from "react";
 import PropTypes from "prop-types";
 import { render } from "react-dom";
@@ -57,7 +58,7 @@ class App extends React.Component {
     parseInt(e.target.value)
       ? this.props.dispatch({ type: "save", number: parseInt(e.target.value) })
       : "";
-      this.forceUpdate();
+    this.forceUpdate();
   }
   componentDidMount() {
     console.log("componentDidMount");
