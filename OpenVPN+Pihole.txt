@@ -10,8 +10,8 @@ I already installed docker
 2. Install Open VPN
 
 $docker volume create --name ovpn-data
-server ip=52.66.18.251
-$docker run -v ovpn-data:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://52.66.18.251
+server ip=23.101.23.85
+$docker run -v ovpn-data:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://23.101.23.85
 Certificate Generation take 2-5 minutes.
 $docker run -v ovpn-data:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
 
@@ -34,7 +34,7 @@ check openvpn, by connecting to vpn
 change 
 pihole web ui in port 8080
 
-$docker run -it -p 53:53/tcp -p 53:53/udp -p 8080:80   --cap-add=NET_ADMIN   -e ServerIP=52.66.18.251   --name pihole  diginc/pi-hole:debian
+$docker run -it -p 53:53/tcp -p 53:53/udp -p 8080:80   --cap-add=NET_ADMIN   -e ServerIP=23.101.23.85   --name pihole  diginc/pi-hole:debian
 
 pihole is running at pot 8080 but isn't configured to openvpn
 get pihole ip 
